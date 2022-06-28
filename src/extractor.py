@@ -12,7 +12,7 @@ def get_tomorrow_schedule(url: str, path: str, group_name: str) -> dict:
     :param url: url to extract data from
     :param path: path to webdriver
     :param group_name: name of the group in capital letters
-    :return: start times and end times of power cut shedule
+    :return: start times and end times of power cut schedules
     """
     driver = webdriver.Chrome(path)
     driver.get(url)
