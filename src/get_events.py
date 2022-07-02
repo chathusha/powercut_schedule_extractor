@@ -1,1 +1,0 @@
-# TODO: Write method to get the events from google calender
