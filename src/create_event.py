@@ -43,20 +43,20 @@ def create_event(title: str, start_time: datetime, end_time: datetime, cred_file
     logger.addHandler(stream_handler)
 
     # scopes needed to access the google calender
-    SCOPES = ["https://www.googleapis.com/auth/calendar"]
+    scopes = ["https://www.googleapis.com/auth/calendar"]
 
     # authancialicate the user
     creds = None
 
     if os.path.exists("api_token.json"):
-        creds = Credentials.from_authorized_user_file("api_token.json", SCOPES)
+        creds = Credentials.from_authorized_user_file("api_token.json", scopes)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                cred_file, SCOPES)
+                cred_file, scopes)
             creds = flow.run_local_server(port=0)
 
         with open("api_token.json", "w") as token:
@@ -64,7 +64,6 @@ def create_event(title: str, start_time: datetime, end_time: datetime, cred_file
 
     try:
         service = build('calendar', 'v3', credentials=creds)
-        # TODO: check the calender is available or not
 
         # call the google calender API to create an event
         body = {
@@ -82,6 +81,5 @@ def create_event(title: str, start_time: datetime, end_time: datetime, cred_file
         event = service.events().insert(calendarId=cal_id, body=body).execute()
         logger.info('Event created with ID: ' + event.get('id'))
         
-
     except HttpError as error:
         logger.exception(error)
