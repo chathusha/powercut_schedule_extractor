@@ -1,5 +1,6 @@
 # files with following extensions:
 *.jpg
+*.bat
 
 # files with following file names:
 sensitive_data.py
