@@ -3,6 +3,9 @@
 
 # files with following file names:
 sensitive_data.py
+api_credentials.json
+api_token.json
+error.log
 
 # directories with following names:
 /venv
