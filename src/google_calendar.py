@@ -20,9 +20,25 @@ class GoogleCalendar():
     SCOPES = ["https://www.googleapis.com/auth/calendar"]
     TOKEN_ID = 'api_token.json'
 
-    # authentication
     def __init__(self, credentials_path: str) -> None:
+        # logging
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)
 
+        formatter = logging.Formatter(
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+        file_handler = logging.FileHandler('error.log')
+        file_handler.setLevel(logging.ERROR)
+        file_handler.setFormatter(formatter)
+
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+
+        self.logger.addHandler(file_handler)
+        self.logger.addHandler(stream_handler)
+
+        # authentication
         self.credentials_path = credentials_path
         self.creds = None
 
@@ -41,6 +57,8 @@ class GoogleCalendar():
 
             with open(self.TOKEN_ID, 'w') as token:
                 token.write(self.creds.to_json())
+
+        self.logger.info('Authentication completed')
 
     # insert event
     def insert_event(self, summary: str, start_time: datetime, end_time: datetime, calendar_id: str = 'primary') -> str:
@@ -74,10 +92,11 @@ class GoogleCalendar():
 
             event = service.events().insert(calendarId=calendar_id, body=body).execute()
 
+            self.logger.info(f"Event created with ID: {event.get('id')}")
             return event.get('id')
 
         except HttpError as error:
-            print(error)
+            self.logger.exception(error)
 
     # get events
     def get_events(self, start_time: datetime, end_time: datetime, calendar_id: str = 'primary') -> dict:
@@ -102,7 +121,7 @@ class GoogleCalendar():
             return event_results
 
         except HttpError as error:
-            print(error)
+            self.logger.exception(error)
 
     # delete event
     def delete_event(self, event_id: str, calendar_id: str = 'primary') -> None:
@@ -119,4 +138,4 @@ class GoogleCalendar():
             service.events().delete(calendarId=calendar_id, eventId=event_id).execute()
 
         except HttpError as error:
-            print(error)
+            self.logger.exception(error)
