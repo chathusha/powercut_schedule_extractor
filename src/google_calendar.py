@@ -105,26 +105,18 @@ class GoogleCalendar():
             print(error)
 
     # delete event
-    def delete_event(event_id: str, calendar_id: str = 'primary') -> None:
+    def delete_event(self, event_id: str, calendar_id: str = 'primary') -> None:
         """
         Delete an event from Google calendar for the given calendar ID and event ID.
 
         Args:
-            event_id (str): 
+            event_id (str): id of the event that needs to be deleted.
+            calendar_id (str): optional, google calender id, by default 'primary'.
         """
-        pass
+        try:
+            service = build('calendar', 'v3', credentials=self.creds)
 
+            service.events().delete(calendarId=calendar_id, eventId=event_id).execute()
 
-# test
-start_time = datetime(year=2022, month=7, day=3)
-end_time = datetime(year=2022, month=7, day=4)
-
-if __name__ == '__main__':
-    path = 'api_credentials.json'
-
-    google_calender = GoogleCalendar(path)
-
-    results = google_calender.get_events(start_time, end_time)
-
-    # print(results)
-    print(results.get('items')[0])
+        except HttpError as error:
+            print(error)
