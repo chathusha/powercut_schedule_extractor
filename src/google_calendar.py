@@ -51,7 +51,7 @@ class GoogleCalendar():
                 self.creds.refresh(Request())
 
             else:
-                self.flow = InstalledAppFlow.from_authorized_user_file(
+                self.flow = InstalledAppFlow.from_client_secrets_file(
                     credentials_path, self.SCOPES)
                 self.creds = self.flow.run_local_server(port=0)
 
