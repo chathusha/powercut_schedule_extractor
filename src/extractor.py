@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,7 +15,10 @@ def get_tomorrow_schedule(url: str, path: str, group_name: str) -> dict:
     :param group_name: name of the group in capital letters
     :return: start times and end times of power cut schedules
     """
-    driver = webdriver.Chrome(path)
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    
+    driver = webdriver.Chrome(path, options=chrome_options)
     driver.get(url)
 
     # load the schedule for tommorow
